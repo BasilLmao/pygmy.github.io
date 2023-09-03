@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Pygmy VR Game</title>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <img src="pygmy-logo.png" alt="Pygmy Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#screenshots">Screenshots</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="about">
+        <div class="section-content">
+            <h2>About Pygmy</h2>
+            <p id="motd">Welcome! Please log in or sign up.</p>
+            <form id="signup-form">
+                <input type="text" id="signup-username" placeholder="Username">
+                <input type="email" id="signup-email" placeholder="Email">
+                <input type="password" id="signup-password" placeholder="Password">
+                <button type="button" onclick="registerUser()">Sign Up</button>
+            </form>
+            <form id="login-form">
+                <input type="email" id="login-email" placeholder="Email">
+                <input type="password" id="login-password" placeholder="Password">
+                <button type="button" onclick="loginUser()">Log In</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 Pygmy VR Game. All rights reserved.</p>
+    </footer>
+
+    <script src="https://api.playfab.com/PlayFabClientApi.js"></script>
+    <script>
+        // Initialize PlayFab
+        PlayFab.settings.titleId = '4279D'; // Replace with your actual title ID
+
+        // Registration function
+        function registerUser() {
+            const username = document.getElementById('signup-username').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+
+            const request = {
+                Username: username,
+                Email: email,
+                Password: password
+            };
+
+            PlayFabClientSDK.RegisterPlayFabUser(request,
+                (result) => {
+                    console.log('User registered:', result);
+                    // After registration, you can also automatically log in the user
+                    loginUser(email, password);
+                },
+                (error) => {
+                    console.error('Registration error:', error);
+                }
+            );
+        }
+
+        // Login function
+        function loginUser(email, password) {
+            const loginEmail = email || document.getElementById('login-email').value;
+            const loginPassword = password || document.getElementById('login-password').value;
+
+            const request = {
+                Email: loginEmail,
+                Password: loginPassword
+            };
+
+            PlayFabClientSDK.LoginWithEmailAddress(request,
+                (result) => {
+                    console.log('User logged in:', result);
+                    // Perform necessary actions after successful login
+                    const motdElement = document.getElementById('motd');
+                    motdElement.textContent = 'Welcome, ' + result.data.PlayFabId + '!';
+                },
+                (error) => {
+                    console.error('Login error:', error);
+                }
+            );
+        }
+    </script>
+</body>
+</html>

@@ -1,3 +1,3 @@
-# pygmy.3sidedstudios.com
+# pygmy.github.io
 
 da pygmy website 🔥
